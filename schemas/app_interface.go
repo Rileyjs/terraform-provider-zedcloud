@@ -1,11 +1,14 @@
 package schemas
 
 import (
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/zededa/terraform-provider/models"
 )
 
 func AppInterfaceModel(d *schema.ResourceData) *models.AppInterface {
+	log.Printf("[ERROR] appinterfacemodel")
 	accessVlanIDInt, _ := d.Get("access_vlan_id").(int)
 	accessVlanID := int64(accessVlanIDInt)
 	var acls []*models.AppACE // []*AppACE

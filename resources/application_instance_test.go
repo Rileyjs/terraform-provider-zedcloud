@@ -19,10 +19,11 @@ import (
 func TestApplicationInstance_Create(t *testing.T) {
 	var got models.AppInstance
 	var expected models.AppInstance
-
+	// fmt.Print("SUP I WANNA TEST")
 	// input config
 	inputPath := "application_instance/create.tf"
 	input := testhelper.MustGetTestInput(t, inputPath)
+	// fmt.Print("Sup", input)
 
 	// expected output
 	expectedPath := "application_instance/create.yaml"
@@ -96,6 +97,7 @@ func testApplicationInstanceExists(resourceName string, applicationModel *models
 
 // testApplicationInstanceAttributes verifies attributes are set correctly by Terraform
 func testApplicationInstanceAttributes(t *testing.T, got, expected *models.AppInstance) resource.TestCheckFunc {
+	fmt.Print("Testing instance attributes")
 	return func(s *terraform.State) error {
 		ignoredFields := []string{
 			"Imvolname",
@@ -107,17 +109,19 @@ func testApplicationInstanceAttributes(t *testing.T, got, expected *models.AppIn
 		}
 
 		ignoredFields = []string{
-			"ID",
-			"Revision",
-			"DeviceID",
-			"AppID",
-			"Interfaces",
-			"Drives",
+			// "ID",
+			// "Revision",
+			// "DeviceID",
+			// "AppID",
+			// //"Interfaces",
+			// //"Drives",
 		}
 		opts = cmpopts.IgnoreFields(models.AppInstance{}, ignoredFields...)
-		if diff := cmp.Diff(*got, *expected, opts); len(diff) != 0 {
+		diff := cmp.Diff(*got, *expected, opts)
+		if len(diff) != 0 {
 			return fmt.Errorf("%s: unexpected diff: \n%s", t.Name(), diff)
 		}
+		fmt.Print("DIFF MADE: ", diff)
 		return nil
 	}
 }

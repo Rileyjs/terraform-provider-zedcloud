@@ -1,11 +1,14 @@
 package schemas
 
 import (
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/zededa/terraform-provider/models"
 )
 
 func AppInstancesModel(d *schema.ResourceData) *models.AppInstances {
+	log.Printf("[ERROR] AppinstancesModel")
 	var list []*models.AppInstance // []*AppInstance
 	listInterface, listIsSet := d.GetOk("list")
 	if listIsSet {
@@ -47,6 +50,7 @@ func AppInstancesModel(d *schema.ResourceData) *models.AppInstances {
 }
 
 func AppInstancesModelFromMap(m map[string]interface{}) *models.AppInstances {
+	log.Printf("[ERROR] AppInstancesModelFromMap")
 	var list []*models.AppInstance // []*AppInstance
 	listInterface, listIsSet := m["list"]
 	if listIsSet {

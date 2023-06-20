@@ -2,6 +2,7 @@ package resources
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"log"
 
@@ -35,7 +36,8 @@ func ApplicationInstanceDataSource() *schema.Resource {
 
 func CreateApplicationInstance(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
-
+	s, _ := json.Marshal(d)
+	log.Printf("[ERROR] Createapplicationinstance data: %s", string(s))
 	model := zschema.ApplicationInstanceModel(d)
 	params := config.CreateParams()
 	params.SetBody(model)
@@ -43,7 +45,7 @@ func CreateApplicationInstance(ctx context.Context, d *schema.ResourceData, m in
 	client := m.(*api_client.ZedcloudAPI)
 
 	resp, err := client.ApplicationInstance.Create(params, nil)
-	log.Printf("[TRACE] response: %v", resp)
+	log.Printf("[TRACE][ERROR] response: %v", resp)
 	if err != nil {
 		diags = append(diags, diag.Errorf("unexpected: %s", err)...)
 		return diags

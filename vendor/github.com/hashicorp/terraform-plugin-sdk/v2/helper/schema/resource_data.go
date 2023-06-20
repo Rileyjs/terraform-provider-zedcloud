@@ -82,7 +82,11 @@ func (d *ResourceData) GetChange(key string) (interface{}, interface{}) {
 // The first result will not necessarilly be nil if the value doesn't exist.
 // The second result should be checked to determine this information.
 func (d *ResourceData) GetOk(key string) (interface{}, bool) {
+	// log.Printf("[ERROR] getOk ", key == "interfaces", key)
 	r := d.getRaw(key, getSourceSet)
+
+	// log.Printf("[ERROR] getOk raw ", r)
+
 	exists := r.Exists && !r.Computed
 	if exists {
 		// If it exists, we also want to verify it is not the zero-value.

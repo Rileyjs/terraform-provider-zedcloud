@@ -1,6 +1,8 @@
 package schemas
 
 import (
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/zededa/terraform-provider/models"
 )
@@ -14,6 +16,7 @@ func AppConfigModel(d *schema.ResourceData) *models.AppConfig {
 	id, _ := d.Get("id").(string)
 	var interfaces []*models.AppInterface // []*AppInterface
 	interfacesInterface, interfacesIsSet := d.GetOk("interfaces")
+	log.Printf("[ERROR] appconfigmodel interfaces read: %+v", interfacesInterface)
 	if interfacesIsSet {
 		var items []interface{}
 		if listItems, isList := interfacesInterface.([]interface{}); isList {

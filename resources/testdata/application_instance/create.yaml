@@ -25,7 +25,7 @@ drives:
       maxsize: "0"
       preserve: false
       readonly: false
-      target: "Disk"
+      target: "Disk?"
 # interfaces:
 #     - accessvlanid: 0
 #       acls:

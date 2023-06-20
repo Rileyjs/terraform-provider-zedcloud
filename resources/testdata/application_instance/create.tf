@@ -114,33 +114,33 @@ resource "zedcloud_application" "test_tf_provider" {
 	        	# target = "Disk"
 	        	# # volumelabel = "vol_1"
         # }
-        # interfaces {
-        #     name = "indirect"
-        #     directattach = false
-        #     privateip = false
-        #     acls {
-        #         matches {
-        #             type = "protocol"
-        #             value = "tcp"
-        #         }
-        #         matches {
-        #             type = "lport"
-        #             value = "8022"
-        #         }
-        #         actions {
-        #             portmap = true
-        #             portmapto {
-        #                 app_port = 22
-        #             }
-        #         }
-        #     }
-        #     acls {
-        #         matches {
-        #             type = "host"
-        #             value = ""
-        #         }
-        #     }
-        # }
+        interfaces {
+            name = "indirect"
+            directattach = false
+            privateip = false
+            acls {
+                matches {
+                    type = "protocol"
+                    value = "tcp"
+                }
+                matches {
+                    type = "lport"
+                    value = "8022"
+                }
+                actions {
+                    portmap = true
+                    portmapto {
+                        app_port = 22
+                    }
+                }
+            }
+            acls {
+                matches {
+                    type = "host"
+                    value = ""
+                }
+            }
+        }
     		owner {
       		company = "Zededa Inc."
       		email = "test@zededa.com"

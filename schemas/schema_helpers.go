@@ -1,46 +1,41 @@
 package schemas
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/zededa/terraform-provider/models"
-	"github.com/zededa/terraform-provider/pkg/compare"
-	"golang.org/x/exp/slices"
 )
 
 // diffSuppressStringListOrder suppresses diffs in schema.List element order. If the lists elements differ, it still
 // reports a diff.
 // FIXME: Note, this is slow since it is called for every element of the schema.List. Thus, it's an expensive workaround
 // that should be removed if possible.
-func diffSuppressStringListOrder(key, oldValue, newValue string, d *schema.ResourceData) bool {
-	// For a list, the key is path to the element, rather than the list.
-	// E.g. "node_groups.2.ips.0"
-	lastDotIndex := strings.LastIndex(key, ".")
-	if lastDotIndex != -1 {
-		key = string(key[:lastDotIndex])
-	}
+// func diffSuppressStringListOrder(key, oldValue, newValue string, d *schema.ResourceData) bool {
+// 	// For a list, the key is path to the element, rather than the list.
+// 	// E.g. "node_groups.2.ips.0"
+// 	lastDotIndex := strings.LastIndex(key, ".")
+// 	if lastDotIndex != -1 {
+// 		key = string(key[:lastDotIndex])
+// 	}
 
-	oldData, newData := d.GetChange(key)
-	if oldData == nil || newData == nil {
-		return false
-	}
+// 	oldData, newData := d.GetChange(key)
+// 	if oldData == nil || newData == nil {
+// 		return false
+// 	}
 
-	var newList []string
-	for _, s := range newData.([]any) {
-		newList = append(newList, s.(string))
-	}
-	var oldList []string
-	for _, s := range oldData.([]any) {
-		oldList = append(oldList, s.(string))
-	}
+// 	var newList []string
+// 	for _, s := range newData.([]any) {
+// 		newList = append(newList, s.(string))
+// 	}
+// 	var oldList []string
+// 	for _, s := range oldData.([]any) {
+// 		oldList = append(oldList, s.(string))
+// 	}
 
-	slices.Sort(oldList)
-	slices.Sort(newList)
+// 	slices.Sort(oldList)
+// 	slices.Sort(newList)
 
-	return slices.Equal(oldList, newList)
-}
+// 	return slices.Equal(oldList, newList)
+// }
 
 // Sort and compare DNSList.
 // FIXME: The API does not guarantee the order of the list items and terraform reports a diff if the order in state and
@@ -184,16 +179,16 @@ func supress() schema.SchemaDiffSuppressFunc {
 	}
 }
 
-func diffSupressSliceOrder(mapKey string) schema.SchemaDiffSuppressFunc {
-	return func(key, oldValue, newValue string, d *schema.ResourceData) bool {
-		equal, err := compare.Slices(d.GetChange(mapKey))
-		if err != nil {
-			fmt.Printf("error comparing %s: %+v\n", mapKey, err)
-			return false
-		}
-		return equal
-	}
-}
+// func diffSupressSliceOrder(mapKey string) schema.SchemaDiffSuppressFunc {
+// 	return func(key, oldValue, newValue string, d *schema.ResourceData) bool {
+// 		equal, err := compare.Slices(d.GetChange(mapKey))
+// 		if err != nil {
+// 			fmt.Printf("error comparing %s: %+v\n", mapKey, err)
+// 			return false
+// 		}
+// 		return equal
+// 	}
+// }
 
 // Equal tells whether a and b contain the same elements.
 // A nil argument is equivalent to an empty slice.

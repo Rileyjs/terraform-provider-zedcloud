@@ -1,6 +1,7 @@
 package schemas
 
 import (
+	"encoding/json"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -8,6 +9,8 @@ import (
 )
 
 func ApplicationInstanceModel(d *schema.ResourceData) *models.AppInstance {
+	log.Printf("[ERROR] mylog applicationinstancemodel")
+	// tflog.Error(context.TODO(), "Unrecognized API response body")
 	activate, _ := d.Get("activate").(bool)
 	appID, _ := d.Get("app_id").(string)
 	appPolicyID, _ := d.Get("app_policy_id").(string)
@@ -71,7 +74,12 @@ func ApplicationInstanceModel(d *schema.ResourceData) *models.AppInstance {
 
 	id, _ := d.Get("id").(string)
 	var interfaces []*models.AppInterface // []*AppInterface
+	log.Printf("[ERROR] mylog loading up data %+v", d)
+	ds, _ := json.Marshal(d)
+	log.Printf("[ERROR] mylog loading up data as json? ", string(ds))
 	interfacesInterface, interfacesIsSet := d.GetOk("interfaces")
+
+	log.Printf("[ERROR] mylog loading up data.interfaces %+v", interfacesInterface)
 	if interfacesIsSet {
 		var items []interface{}
 		if listItems, isList := interfacesInterface.([]interface{}); isList {
@@ -87,6 +95,7 @@ func ApplicationInstanceModel(d *schema.ResourceData) *models.AppInstance {
 			interfaces = append(interfaces, m)
 		}
 	}
+	log.Printf("[ERROR] mylog applicationinstancemodel interfaces", interfaces)
 	isSecretUpdated, _ := d.Get("is_secret_updated").(bool)
 	var logs *models.AppInstanceLogs // AppInstanceLogs
 	logsInterface, logsIsSet := d.GetOk("logs")
@@ -201,6 +210,7 @@ func ApplicationInstanceModel(d *schema.ResourceData) *models.AppInstance {
 }
 
 func ApplicationInstanceModelFromMap(m map[string]interface{}) *models.AppInstance {
+	log.Printf("[ERROR] mylog applicationisnstancemodelfrommap")
 	activate := m["activate"].(bool)
 	appID := m["app_id"].(string)
 	appPolicyID := m["app_policy_id"].(string)
@@ -537,6 +547,7 @@ func ApplicationInstance() map[string]*schema.Schema {
 				Schema: CustomConfig(),
 			},
 			Optional: true,
+			Computed: true,
 		},
 
 		"deployment_type": {
@@ -565,6 +576,7 @@ func ApplicationInstance() map[string]*schema.Schema {
 			},
 			// ConfigMode: schema.SchemaConfigModeAttr,
 			Optional: true,
+			Computed: true,
 		},
 
 		"encrypted_secrets": {
@@ -592,7 +604,8 @@ func ApplicationInstance() map[string]*schema.Schema {
 			},
 			// ConfigMode: schema.SchemaConfigModeAttr,
 			Optional:         true,
-			DiffSuppressFunc: supress(),
+			Computed:         true,
+			DiffSuppressFunc: diffSuppressInterfaceListOrder("interfaces"),
 		},
 
 		"is_secret_updated": {
@@ -617,12 +630,15 @@ func ApplicationInstance() map[string]*schema.Schema {
 				Schema: ManifestInfoSchema(),
 			},
 			Optional: true,
+			Computed: true,
 		},
 
 		"name": {
-			Description: `User defined name of the app instance, unique across the enterprise. Once app instance is created, name can’t be changed`,
+			Description: `SUP User defined name of the app instance, unique across the enterprise. Once app instance is created, name can’t be changed`,
 			Type:        schema.TypeString,
-			Optional:    true,
+			ForceNew:    true,
+			Required:    true,
+			//Optional: true,
 		},
 
 		"project_id": {
@@ -718,12 +734,14 @@ func ApplicationInstance() map[string]*schema.Schema {
 				Schema: VMSchema(),
 			},
 			Optional: true,
+			Computed: true,
 		},
 	}
 }
 
 // Retrieve property field names for updating the AppInstance resource
 func GetApplicationInstancePropertyFields() (t []string) {
+	log.Printf("[ERROR] mylog getapplicationinstancepropertyfield")
 	return []string{
 		"activate",
 		"app_id",
